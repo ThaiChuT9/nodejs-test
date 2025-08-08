@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+
+<div class="container">
+    <h1>Tree Shop</h1>
+    
+    <div class="form-container">
+        <form action="/add" method="POST" class="input-form" enctype="multipart/form-data">
+            <input type="text" name="treename" placeholder="Tree Name" required />
+            <textarea name="description" placeholder="Description" rows="4" required></textarea>
+            
+            <div class="image-input-container">
+                <div class="image-preview">
+                    <img id="preview" src="/images/default-tree.jpg" alt="Preview">
+                </div>
+                <div class="image-upload">
+                    <input type="file" id="imageInput" name="image" accept="image/*" style="display: none;" />
+                    <button type="button" id="uploadBtn">Choose Image</button>
+                </div>
+            </div>
+
+            <button type="submit">Add Tree</button>
+        </form>
+
+        <form action="/reset" method="POST">
+            <button type="submit" class="reset-button">Reset All</button>
+        </form>
+    </div>
+
+    <ul class="tree-list">
+        <% trees.forEach(function(tree) { %>
+            <li class="tree-card">
+                <img src="<%= tree.image || '/images/default-tree.jpg' %>" alt="<%= tree.treename %>" />
+                <h3><%= tree.treename %></h3>
+                <p><%= tree.description %></p>
+            </li>
+        <% }); %>
+    </ul>
+</div>
+
+<script>
+document.getElementById('uploadBtn').addEventListener('click', function() {
+    document.getElementById('imageInput').click();
+});
+
+document.getElementById('imageInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+
+<%- include('partials/footer') %>
